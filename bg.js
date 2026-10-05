@@ -22,10 +22,16 @@
   const state = new Map();  // per-bar brightness, keyed by lattice position
   let frameNo = 0;
 
+  // Match the bitmap to the canvas's CSS box (100lvh tall, see style.css). That box
+  // stays the same size when a phone's address bar slides in or out, so scrolling
+  // never triggers a redraw at a new size or a stretched frame.
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = innerWidth;
-    H = innerHeight;
+    const box = canvas.getBoundingClientRect();
+    const w = Math.round(box.width), h = Math.round(box.height);
+    if (w === W && h === H) return;
+    W = w;
+    H = h;
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

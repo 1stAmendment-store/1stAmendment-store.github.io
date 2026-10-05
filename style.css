@@ -13,6 +13,9 @@
 
 html { scroll-behavior: smooth; }
 
+/* No rubber-band bounce / stretch at the page ends on phones. */
+html, body { overscroll-behavior-y: none; }
+
 body {
   margin: 0;
   background: #060b16;
@@ -24,7 +27,13 @@ body {
 a { color: var(--accent-2); }
 
 /* Animated light-lattice wallpaper (bg.js) */
-#bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; display: block; }
+/* Sized to the tallest the viewport gets (mobile toolbars hidden), so showing or
+   hiding the address bar never resizes or stretches it. */
+#bg {
+  position: fixed; top: 0; left: 0; width: 100vw;
+  height: 100vh; height: 100lvh;
+  z-index: -1; display: block; pointer-events: none;
+}
 
 /* Every block of text sits on a dark panel so the lights never run behind it. */
 :root {
