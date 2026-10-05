@@ -91,6 +91,13 @@ section .lead { color: var(--muted); margin: 0 0 28px; }
 
 .empty { color: var(--muted); font-style: italic; }
 
+.note {
+  margin: 22px 0 0; padding: 14px 18px;
+  border-left: 3px solid var(--accent); border-radius: 8px;
+  background: rgba(91, 155, 255, 0.08); color: var(--text);
+}
+.note strong { color: var(--accent-2); }
+
 dl.facts { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; margin: 0; }
 dl.facts dt { color: var(--muted); }
 dl.facts dd { margin: 0; }
