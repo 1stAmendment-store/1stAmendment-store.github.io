@@ -12,6 +12,7 @@
   const EDGE = 86;          // node-to-node distance in px
   const GAP = 13;           // empty space around each node
   const GROW = 0.14;        // how much a fully lit bar lengthens
+  const WAVE_SPEED = 0.7;   // 1 = original pace; lower is slower
   const BG = "#060b16";
 
   let W = 0, H = 0, bars = [];
@@ -47,13 +48,14 @@
   // Brightness field, 0..1. Two crossing swells plus a slowly drifting
   // radial ripple make the interference pattern read as moving water.
   function field(x, y, t) {
-    const a = 0.6 + 0.4 * Math.sin(t * 0.07);                 // swell direction drifts
-    const w1 = Math.sin((x * Math.cos(a) + y * Math.sin(a)) * 0.0095 - t * 1.25);
-    const w2 = Math.sin((x * Math.cos(a + 2.1) + y * Math.sin(a + 2.1)) * 0.0065 - t * 0.85);
-    const cx = W * (0.5 + 0.3 * Math.sin(t * 0.11));
-    const cy = H * (0.5 + 0.3 * Math.cos(t * 0.083));
+    const tw = t * WAVE_SPEED;
+    const a = 0.6 + 0.4 * Math.sin(tw * 0.07);                // swell direction drifts
+    const w1 = Math.sin((x * Math.cos(a) + y * Math.sin(a)) * 0.0095 - tw * 1.25);
+    const w2 = Math.sin((x * Math.cos(a + 2.1) + y * Math.sin(a + 2.1)) * 0.0065 - tw * 0.85);
+    const cx = W * (0.5 + 0.3 * Math.sin(tw * 0.11));
+    const cy = H * (0.5 + 0.3 * Math.cos(tw * 0.083));
     const r = Math.hypot(x - cx, y - cy);
-    const w3 = Math.sin(r * 0.012 - t * 1.7);
+    const w3 = Math.sin(r * 0.012 - tw * 1.7);
     let v = (0.4 * w1 + 0.3 * w2 + 0.3 * w3);
     v = Math.max(0, v) ** 1.8 * 2.6;                          // only crests light up
 
