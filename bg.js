@@ -2,8 +2,8 @@
 // of light rolling slowly across it. Bars on a wave crest glow brighter and grow.
 // The same gentle animation runs for every visitor, including those who ask
 // their system for reduced motion, so it is kept slow and soft on purpose.
-// The lattice lives in page coordinates, so it scrolls with the content; the
-// canvas itself stays fixed to the viewport and only draws what is on screen.
+// The canvas is fixed to the viewport, so the wallpaper stays put while the
+// page content scrolls over it.
 (() => {
   const canvas = document.createElement("canvas");
   canvas.id = "bg";
@@ -18,7 +18,7 @@
   const BG = "#060b16";
   const D = EDGE / Math.SQRT2;              // lattice step on each axis
 
-  let W = 0, H = 0, docH = 0;
+  let W = 0, H = 0;
   const state = new Map();  // per-bar brightness, keyed by lattice position
   let frameNo = 0;
 
@@ -26,13 +26,12 @@
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = innerWidth;
     H = innerHeight;
-    docH = document.documentElement.scrollHeight;
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  // Brightness field in page coordinates, 0..1. Two crossing swells plus a
+  // Brightness field in screen coordinates, 0..1. Two crossing swells plus a
   // slowly drifting radial ripple make the interference read as moving water.
   function field(x, y, t) {
     const tw = t * WAVE_SPEED;
@@ -40,7 +39,7 @@
     const w1 = Math.sin((x * Math.cos(a) + y * Math.sin(a)) * 0.0095 - tw * 1.25);
     const w2 = Math.sin((x * Math.cos(a + 2.1) + y * Math.sin(a + 2.1)) * 0.0065 - tw * 0.85);
     const cx = W * (0.5 + 0.3 * Math.sin(tw * 0.11));
-    const cy = docH * (0.5 + 0.4 * Math.cos(tw * 0.083));
+    const cy = H * (0.5 + 0.3 * Math.cos(tw * 0.083));
     const r = Math.hypot(x - cx, y - cy);
     const w3 = Math.sin(r * 0.012 - tw * 1.7);
     let v = (0.4 * w1 + 0.3 * w2 + 0.3 * w3);
@@ -50,7 +49,6 @@
 
   function draw(t, ease) {
     frameNo++;
-    const sy = window.scrollY;
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = BG;
     ctx.fillRect(0, 0, W, H);
@@ -58,10 +56,10 @@
 
     const k = (EDGE / 2 - GAP) / Math.SQRT2;  // half bar length on each axis
 
-    // Lattice rows that overlap the viewport. Nodes sit on a checkerboard of
+    // Nodes sit on a checkerboard of
     // step D; each sends one bar down-right and one up-right.
-    const j0 = Math.floor(sy / D) - 1;
-    const j1 = Math.ceil((sy + H) / D) + 1;
+    const j0 = -1;
+    const j1 = Math.ceil(H / D) + 1;
     const cols = Math.ceil(W / D) + 1;
     const visible = [];
 
@@ -70,15 +68,14 @@
       for (let i = -1; i <= cols; i++) {
         if ((i + j) & 1) continue;
         for (const dir of [1, -1]) {
-          const px = i * D + D / 2;             // bar midpoint, page coords
-          const py = j * D + dir * D / 2;
+          const px = i * D + D / 2;             // bar midpoint
+          const y = j * D + dir * D / 2;
           const key = (j * 2 + (dir > 0 ? 1 : 0)) * 4096 + i + 1;
           let s = state.get(key);
           if (!s) { s = { v: 0, f: 0 }; state.set(key, s); }
-          s.v += (field(px, py, t) - s.v) * ease;
+          s.v += (field(px, y, t) - s.v) * ease;
           s.f = frameNo;
 
-          const y = py - sy;                     // screen coords
           ctx.moveTo(px - k, y - dir * k);
           ctx.lineTo(px + k, y + dir * k);
           if (s.v >= 0.03) visible.push(px, y, dir, s.v);
@@ -105,7 +102,7 @@
       ctx.stroke();
     }
 
-    // Forget bars that scrolled away long ago.
+    // Forget bars left over from a larger window size.
     if (frameNo % 120 === 0) {
       for (const [key, s] of state) if (frameNo - s.f > 120) state.delete(key);
     }
@@ -126,7 +123,6 @@
   });
 
   resize();
-  addEventListener("load", resize);          // page height can change as it finishes loading
   draw(0, 1);                                // paint immediately, before the first animation tick
   requestAnimationFrame(frame);
 })();
