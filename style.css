@@ -15,7 +15,7 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%) fixed;
+  background: #060b16;
   color: var(--text);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   line-height: 1.6;
@@ -23,11 +23,19 @@ body {
 
 a { color: var(--accent-2); }
 
+/* Animated light-lattice wallpaper (bg.js) */
+#bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; display: block; }
+
+/* Text sitting directly on the lights needs a soft halo to stay readable. */
+.hero h1, .hero p, section h2, section .lead, .doc h1, .doc > p {
+  text-shadow: 0 0 12px #060b16, 0 0 24px #060b16, 0 1px 2px #060b16;
+}
+
 .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
 
 header.nav {
   position: sticky; top: 0; z-index: 10;
-  background: rgba(11, 20, 38, 0.9);
+  background: rgba(6, 11, 22, 0.85);
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--border);
 }
@@ -57,8 +65,13 @@ section .lead { color: var(--muted); margin: 0 0 28px; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
 
+.card, dl.facts, .refs {
+  background: rgba(12, 24, 50, 0.78); border: 1px solid var(--border);
+  backdrop-filter: blur(3px);
+}
+dl.facts, .refs { border-radius: 12px; padding: 22px; }
+
 .card {
-  background: var(--card); border: 1px solid var(--border);
   border-radius: 12px; padding: 22px;
 }
 .card h3 { margin: 0 0 6px; font-size: 1.15rem; }
