@@ -86,7 +86,7 @@ section .lead { color: var(--muted); margin: 0 0 28px; }
   display: inline-block; font-size: 0.78rem; font-weight: 600;
   padding: 3px 10px; border-radius: 999px;
   background: rgba(91, 155, 255, 0.15); color: var(--accent-2);
-  margin-right: 6px;
+  margin: 0 6px 6px 0;
 }
 
 .empty { color: var(--muted); font-style: italic; }
