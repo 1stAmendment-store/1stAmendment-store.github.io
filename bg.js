@@ -1,5 +1,7 @@
 // Animated wallpaper: a diagonal lattice of light bars with water-like waves
-// of light rolling across it. Bars on a wave crest glow brighter and grow.
+// of light rolling slowly across it. Bars on a wave crest glow brighter and grow.
+// The same gentle animation runs for every visitor, including those who ask
+// their system for reduced motion, so it is kept slow and soft on purpose.
 // The lattice lives in page coordinates, so it scrolls with the content; the
 // canvas itself stays fixed to the viewport and only draws what is on screen.
 (() => {
@@ -9,18 +11,15 @@
   document.body.prepend(canvas);
   const ctx = canvas.getContext("2d");
 
-  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
-
   const EDGE = 86;          // node-to-node distance in px
   const GAP = 13;           // empty space around each node
   const GROW = 0.14;        // how much a fully lit bar lengthens
-  const WAVE_SPEED = 0.7;   // 1 = original pace; lower is slower
+  const WAVE_SPEED = 0.35;  // 1 = original pace; lower is slower
   const BG = "#060b16";
   const D = EDGE / Math.SQRT2;              // lattice step on each axis
 
   let W = 0, H = 0, docH = 0;
   const state = new Map();  // per-bar brightness, keyed by lattice position
-  const ripples = [];       // pointer ripples in page coords: {x, y, t0}
   let frameNo = 0;
 
   function resize() {
@@ -45,14 +44,7 @@
     const r = Math.hypot(x - cx, y - cy);
     const w3 = Math.sin(r * 0.012 - tw * 1.7);
     let v = (0.4 * w1 + 0.3 * w2 + 0.3 * w3);
-    v = Math.max(0, v) ** 1.8 * 2.6;                          // only crests light up
-
-    for (const p of ripples) {
-      const age = t - p.t0;
-      const R = age * 340;
-      const ring = Math.exp(-(((Math.hypot(x - p.x, y - p.y) - R) / 45) ** 2));
-      v += ring * Math.exp(-age * 1.1);
-    }
+    v = Math.max(0, v) ** 1.8 * 2.2;                          // only crests light up
     return Math.min(1, v);
   }
 
@@ -117,7 +109,6 @@
     if (frameNo % 120 === 0) {
       for (const [key, s] of state) if (frameNo - s.f > 120) state.delete(key);
     }
-    while (ripples.length && t - ripples[0].t0 > 4) ripples.shift();
   }
 
   const start = performance.now();
@@ -128,30 +119,14 @@
     requestAnimationFrame(frame);
   }
 
-  let lastRipple = 0;
-  function addRipple(e, force) {
-    const ms = performance.now();
-    if (!force && ms - lastRipple < 450) return;
-    lastRipple = ms;
-    ripples.push({ x: e.clientX, y: e.clientY + window.scrollY, t0: now() });
-    if (ripples.length > 8) ripples.shift();
-  }
-
   let resizeTimer;
   addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { resize(); if (reduceMotion.matches) draw(8, 1); }, 120);
+    resizeTimer = setTimeout(resize, 120);
   });
 
   resize();
   addEventListener("load", resize);          // page height can change as it finishes loading
-  if (reduceMotion.matches) {
-    draw(8, 1);                              // still frame that follows the scroll
-    addEventListener("scroll", () => draw(8, 1), { passive: true });
-  } else {
-    addEventListener("pointermove", e => addRipple(e, false), { passive: true });
-    addEventListener("pointerdown", e => addRipple(e, true), { passive: true });
-    draw(0, 1);                              // paint immediately, before the first animation tick
-    requestAnimationFrame(frame);
-  }
+  draw(0, 1);                                // paint immediately, before the first animation tick
+  requestAnimationFrame(frame);
 })();
