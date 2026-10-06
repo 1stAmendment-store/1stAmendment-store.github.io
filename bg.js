@@ -122,11 +122,7 @@
     requestAnimationFrame(frame);
   }
 
-  let resizeTimer;
-  addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resize, 120);
-  });
+  addEventListener("resize", resize);        // immediate, so a resized box is never shown stretched
 
   resize();
   draw(0, 1);                                // paint immediately, before the first animation tick
