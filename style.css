@@ -193,3 +193,10 @@ dialog.viewer::backdrop { background: rgba(3, 7, 16, 0.6); }
   .viewer-stage { padding: 8px 12px 60px; }
   .viewer-nav { top: auto; bottom: 8px; transform: none; width: 40px; height: 40px; }
 }
+
+/* Long-form pages (privacy, delete account) */
+.doc h2 { font-size: 1.3rem; margin: 32px 0 10px; color: var(--accent-2); }
+.doc ol, .doc ul { padding-left: 22px; margin: 0 0 14px; }
+.doc li { margin-bottom: 8px; }
+.doc-end { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--border); }
+.doc-end h2 { margin-top: 0; }
