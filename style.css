@@ -219,3 +219,11 @@ dialog.viewer::backdrop { background: rgba(3, 7, 16, 0.6); }
 .credits { font-size: 0.85rem; color: var(--muted); }
 .card-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .card-actions .btn-preview { margin-top: 4px; text-decoration: none; }
+
+/* App cards: buttons pinned to the bottom, so every card's buttons line up. */
+.card:has(.card-actions) { display: flex; flex-direction: column; }
+.card .card-actions { margin-top: auto; padding-top: 4px; }
+.tags { margin-bottom: 4px; }
+.card .card-actions { flex-wrap: nowrap; gap: 8px; }
+.card .card-actions .btn-preview { padding: 8px 14px; white-space: nowrap; }
+.card .card-actions .btn { border: 1px solid var(--accent); }
