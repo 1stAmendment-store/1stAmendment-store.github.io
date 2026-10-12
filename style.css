@@ -234,9 +234,10 @@ dialog.viewer::backdrop { background: rgba(3, 7, 16, 0.6); }
 .demo-tools .btn { font: inherit; font-weight: 600; cursor: pointer; color: var(--text); }
 .demo-exit {
   position: absolute; top: 10px; right: 10px; z-index: 2;
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 1px solid var(--border); background: rgba(6, 11, 22, 0.8); color: #fff;
-  font-size: 1.5rem; line-height: 1; cursor: pointer;
+  width: 40px; height: 40px; padding: 0;
+  border: 0; background: none; color: #fff;
+  font-size: 1.9rem; line-height: 1; cursor: pointer;
+  text-shadow: 0 0 4px #000, 0 0 8px #000;   /* readable over any part of the app */
 }
 .demo-exit[hidden] { display: none; }
 body.demo-full { overflow: hidden; }
