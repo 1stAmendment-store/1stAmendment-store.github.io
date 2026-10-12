@@ -249,3 +249,7 @@ body.demo-full .demo-frame {
 /* The panel's backdrop-filter would make it the containing block for the fixed
    frame (and its own stacking context), trapping "full screen" inside it. */
 body.demo-full .doc { backdrop-filter: none; -webkit-backdrop-filter: none; }
+/* A card with two buttons (Movie Magic 8 Ball's Preview and Demo): equal width,
+   centred, spread across the card. Single-button cards keep their left alignment. */
+.card .card-actions:has(> .btn + .btn) { justify-content: space-evenly; }
+.card .card-actions:has(> .btn + .btn) > .btn { flex: 0 0 40%; text-align: center; }
