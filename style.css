@@ -200,3 +200,22 @@ dialog.viewer::backdrop { background: rgba(3, 7, 16, 0.6); }
 .doc li { margin-bottom: 8px; }
 .doc-end { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--border); }
 .doc-end h2 { margin-top: 0; }
+
+/* Playable demo page (/play/...) */
+.demo-page { max-width: 820px; }
+.demo-stage { display: flex; justify-content: center; margin: 8px 0 24px; }
+.demo-frame {
+  /* Phone-shaped, 9:16, as large as the screen allows. */
+  width: min(100%, 420px, calc((100dvh - 140px) * 9 / 16));
+  aspect-ratio: 9 / 16;
+  border: 2px solid var(--border); border-radius: 28px; overflow: hidden;
+  background: #0d0f17;
+  display: flex; align-items: center; justify-content: center;
+}
+.demo-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.demo-start { text-align: center; padding: 24px; color: var(--muted); }
+.demo-start .btn { font: inherit; font-weight: 600; border: 0; cursor: pointer; }
+.demo-notes { color: var(--muted); }
+.credits { font-size: 0.85rem; color: var(--muted); }
+.card-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.card-actions .btn-preview { margin-top: 4px; text-decoration: none; }

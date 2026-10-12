@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Movie Magic 8 Ball Demo</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <!-- Based on Unity's Default web template, trimmed to fill its frame on the
+         1stamendment.store demo page (/play/movie-magic-8-ball/). -->
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0d0f17; }
+      #unity-canvas { display: block; width: 100%; height: 100%; background: #0d0f17; outline: none; }
+      #loading {
+        position: absolute; inset: 0; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 14px;
+        color: #9fb0cf; font: 15px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      #bar { width: 60%; max-width: 220px; height: 6px; border-radius: 3px; background: #22396b; overflow: hidden; }
+      #bar-fill { width: 0%; height: 100%; background: #5b9bff; transition: width 0.2s; }
+      #error { color: #ffb4b4; padding: 0 24px; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+    <div id="loading">
+      <div>Loading Movie Magic 8 Ball&hellip;</div>
+      <div id="bar"><div id="bar-fill"></div></div>
+    </div>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+      var loading = document.querySelector("#loading");
+
+      var config = {
+        arguments: [],
+        dataUrl: "Build/Magic_8-Ball.data.unityweb",
+        frameworkUrl: "Build/Magic_8-Ball.framework.js.unityweb",
+        codeUrl: "Build/Magic_8-Ball.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "1stAmendment",
+        productName: "Magic 8-Ball",
+        productVersion: "1.0",
+        // Lists and history are files in persistentDataPath; without this they
+        // are lost when the page closes.
+        autoSyncPersistentDataPath: true,
+        showBanner: function (msg, type) {
+          if (type === "error") showError(msg);
+          else console.warn(msg);
+        },
+      };
+
+      function showError(msg) {
+        loading.style.display = "flex";
+        loading.innerHTML = '<div id="error">The demo could not start in this browser.<br><small></small></div>';
+        loading.querySelector("small").textContent = String(msg);
+      }
+
+      var script = document.createElement("script");
+      script.src = "Build/Magic_8-Ball.loader.js";
+      script.onload = function () {
+        createUnityInstance(canvas, config, function (progress) {
+          document.querySelector("#bar-fill").style.width = 100 * progress + "%";
+        }).then(function () {
+          loading.style.display = "none";
+          canvas.focus();
+        }).catch(showError);
+      };
+      script.onerror = function () { showError("The game files did not load."); };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
