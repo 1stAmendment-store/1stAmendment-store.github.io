@@ -253,3 +253,15 @@ body.demo-full .doc { backdrop-filter: none; -webkit-backdrop-filter: none; }
    centred, spread across the card. Single-button cards keep their left alignment. */
 .card .card-actions:has(> .btn + .btn) { justify-content: space-evenly; }
 .card .card-actions:has(> .btn + .btn) > .btn { flex: 0 0 40%; text-align: center; }
+
+/* App privacy policies (/privacy/<app>/): long text, read on phones */
+.policy h2 { font-size: 1.35rem; margin: 36px 0 12px; color: var(--accent-2); }
+.policy h3 { font-size: 1.12rem; margin: 26px 0 10px; color: var(--text); }
+.policy p, .policy li { overflow-wrap: anywhere; }
+.policy ul { padding-left: 22px; margin: 0 0 14px; }
+.policy li { margin-bottom: 8px; }
+.policy hr { border: 0; border-top: 1px solid var(--border); margin: 28px 0; }
+.policy code { font-size: 0.92em; background: rgba(91, 155, 255, 0.12); padding: 1px 5px; border-radius: 4px; }
+.policy blockquote { margin: 18px 0; padding: 4px 16px; border-left: 3px solid var(--border); color: var(--muted); }
+.policy-meta { color: var(--muted); }
+.policy h2, .policy h3 { scroll-margin-top: 80px; }   /* clear the sticky header on #delete-account */
